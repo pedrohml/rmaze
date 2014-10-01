@@ -38,6 +38,7 @@ describe Maze do
 		maze_copy = Maze.new(@width, @height)
 		expect(@maze).to eq(maze_copy)
 		expect(@maze).to eql(maze_copy)
+		expect(@maze).not_to eq("")
 	end
 
 	it '#inspect' do

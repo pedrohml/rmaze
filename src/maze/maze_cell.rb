@@ -3,7 +3,9 @@ class MazeCell
 
 	def initialize(maze, x, y)
 		@maze = maze
-		@x, @y = x % @maze.width, y % @maze.height
+		@x = x
+		@y = y
+		@x, @y = x % @maze.width, y % @maze.height if @maze.mirrored
 	end
 
 	def debug
@@ -14,19 +16,19 @@ class MazeCell
 	end
 
 	def left
-		MazeCell.new(@maze, @x - 1, @y)
+		MazeCell.new(@maze, @x - 1, @y) if @maze.mirrored || @x > 0
 	end
 
 	def up
-		MazeCell.new(@maze, @x, @y - 1)
+		MazeCell.new(@maze, @x, @y - 1) if @maze.mirrored || @y > 0
 	end
 
 	def right
-		MazeCell.new(@maze, @x + 1, @y)
+		MazeCell.new(@maze, @x + 1, @y) if @maze.mirrored || @x < (@maze.width - 1)
 	end
 
 	def down
-		MazeCell.new(@maze, @x, @y + 1)
+		MazeCell.new(@maze, @x, @y + 1) if @maze.mirrored || @y < (@maze.height - 1)
 	end
 
 	def wall_left?
@@ -47,5 +49,33 @@ class MazeCell
 	def wall_down?
 		i, j = @maze.xy_to_ij(@x, @y)
 		@maze.value(i + 1, j) != 0
+	end
+
+	def neighbours
+		[left, up, right, down].compact
+	end
+
+	def hash
+		"#{@maze.hash}00#{@x}00#{@y}".to_i
+	end
+
+	def eql?(object)
+		if (object.class == self.class)
+			 @x == object.x && @y == object.y && @maze == object.maze
+		elsif
+			super(object)
+		end
+	end
+
+	def ==(object)
+		self.eql? object
+	end
+
+	def !=(object)
+		!(self.eql? object)
+	end
+
+	def inspect
+		"#<#{self.class}: @maze=#{@maze.inspect}, @x=#{@x}, @y=#{@y}>"
 	end
 end

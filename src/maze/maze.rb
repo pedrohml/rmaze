@@ -5,19 +5,21 @@ class Maze
 	attr_reader :matrix
 
 	public
-	attr_reader :width, :height
+	attr_reader :mirrored, :width, :height, :width_full, :height_full
 
 	def initialize(width, height)
+		@mirrored = false
 		@height, @width = height, width
+		@height_full, @width_full = (1 + 2*@height), (1 + 2*@width)
 		@matrix = []
-		(0...(1 + 2*@height)).each do
-			@matrix << [0]*(1 + 2*@width)
+		(0...@height_full).each do
+			@matrix << [0]*@width_full
 		end
 	end
 
 	def debug
 		@matrix.each do |row|
-			puts row.join(' ')
+			puts row.join(' ').gsub(/0/, ' ').gsub(/1/, '#').gsub(/2/, 'X')
 		end
 		self
 	end
@@ -31,8 +33,7 @@ class Maze
 	end
 
 	def xy_to_ij(x, y)
-		x = x % @width
-		y = y % @height
+		x, y = x % @width, y % @height if @mirrored
 		i = 1 + (2 * y)
 		j = 1 + (2 * x)
 		[i, j]
@@ -42,8 +43,12 @@ class Maze
 		self
 	end
 
+	def hash
+		"#{@width}000#{@height}".to_i
+	end
+
 	def eql?(object)
-		if (object.class == self.class)
+		if (object.class == self.class && object.hash == self.hash)
 			@matrix.flatten.join('') == object.matrix.flatten.join('')
 		elsif
 			super(object)
@@ -52,6 +57,10 @@ class Maze
 
 	def ==(object)
 		self.eql? object
+	end
+
+	def !=(object)
+		!(self.eql? object)
 	end
 
 	def inspect

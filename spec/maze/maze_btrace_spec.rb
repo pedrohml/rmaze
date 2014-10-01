@@ -6,8 +6,8 @@ describe MazeBTrace do
 		@height = rand(10) + 15
 		@maze = MazeBTrace.new(@width, @height)
 	end
+
 	it '#generate' do
-		@maze.generate
-		expect(@maze.value(0, 0)).to eq(1)
+		expect { @maze.generate }.not_to raise_error
 	end
 end
