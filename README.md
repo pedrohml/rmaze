@@ -1,0 +1,4 @@
+maze
+====
+
+Maze generation script
