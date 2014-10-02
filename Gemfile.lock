@@ -27,6 +27,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  OptionParser
+  OptionParser (~> 0.5.1)
   rspec (~> 3.1.0)
   simplecov

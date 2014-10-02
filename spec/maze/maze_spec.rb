@@ -1,5 +1,3 @@
-require 'maze/maze'
-
 describe Maze do
 	before do
 		@width = rand(10) + 15

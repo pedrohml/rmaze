@@ -1,5 +1,3 @@
-require 'maze/maze_btrace'
-
 describe MazeBTrace do
 	before do
 		@width = rand(10) + 15
