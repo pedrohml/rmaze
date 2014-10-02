@@ -17,7 +17,7 @@ describe Maze do
 	end
 
 	it '#cell' do
-		cell = @maze.cell(3, 8);
+		cell = @maze.cell(3, 8)
 		expect(cell).to be_a_kind_of(MazeCell)
 		expect(cell.maze).to eq(@maze)
 		expect(cell.x).to eq(3)
@@ -34,14 +34,16 @@ describe Maze do
 		expect(@maze.generate).to eq(@maze)
 	end
 
-	it '#eql?' do
-		maze_copy = Maze.new(@width, @height)
-		expect(@maze).to eq(maze_copy)
-		expect(@maze).to eql(maze_copy)
-		expect(@maze).not_to eq("")
+	it '#hash' do
+		expect(@maze.hash).to eq("#{@width}#{@height}".to_i)
 	end
 
 	it '#inspect' do
 		expect(@maze.inspect).to eq("#<Maze: @width=#{@width}, @height=#{@height}>")
+	end
+
+	it '#debug' do
+		allow($stdout).to receive(:puts).exactly(@maze.height_full).times
+		@maze.debug
 	end
 end

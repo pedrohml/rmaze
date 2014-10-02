@@ -3,9 +3,9 @@ class MazeCell
 
 	def initialize(maze, x, y)
 		@maze = maze
-		@x = x
-		@y = y
+		@x, @y = x, y
 		@x, @y = x % @maze.width, y % @maze.height if @maze.mirrored
+		@hash = "#{@maze.hash}#{@x}#{@y}".to_i
 	end
 
 	def debug
@@ -31,24 +31,28 @@ class MazeCell
 		MazeCell.new(@maze, @x, @y + 1) if @maze.mirrored || @y < (@maze.height - 1)
 	end
 
-	def wall_left?
+	def has_wall_left?
 		i, j = @maze.xy_to_ij(@x, @y)
 		@maze.value(i, j - 1) != 0
 	end
 
-	def wall_up?
+	def has_wall_up?
 		i, j = @maze.xy_to_ij(@x, @y)
 		@maze.value(i - 1, j) != 0
 	end
 
-	def wall_right?
+	def has_wall_right?
 		i, j = @maze.xy_to_ij(@x, @y)
 		@maze.value(i, j + 1) != 0
 	end
 
-	def wall_down?
+	def has_wall_down?
 		i, j = @maze.xy_to_ij(@x, @y)
 		@maze.value(i + 1, j) != 0
+	end
+
+	def confined?
+		has_wall_left? && has_wall_up? && has_wall_right? && has_wall_down?
 	end
 
 	def neighbours
@@ -56,7 +60,7 @@ class MazeCell
 	end
 
 	def hash
-		"#{@maze.hash}00#{@x}00#{@y}".to_i
+		@hash
 	end
 
 	def eql?(object)

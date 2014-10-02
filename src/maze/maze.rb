@@ -15,6 +15,7 @@ class Maze
 		(0...@height_full).each do
 			@matrix << [0]*@width_full
 		end
+		@hash = "#{@width}#{@height}".to_i # optimized pre-computed hash
 	end
 
 	def debug
@@ -44,23 +45,7 @@ class Maze
 	end
 
 	def hash
-		"#{@width}000#{@height}".to_i
-	end
-
-	def eql?(object)
-		if (object.class == self.class && object.hash == self.hash)
-			@matrix.flatten.join('') == object.matrix.flatten.join('')
-		elsif
-			super(object)
-		end
-	end
-
-	def ==(object)
-		self.eql? object
-	end
-
-	def !=(object)
-		!(self.eql? object)
+		@hash
 	end
 
 	def inspect

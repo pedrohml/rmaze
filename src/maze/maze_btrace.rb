@@ -30,20 +30,18 @@ class MazeBTrace < Maze
 		super
 		stack = []
 		visited_cells = []
-		unvisited_cells = []
+		all_index_cells = []
 		current_cell = cell(0, 0)
 		visited_cells.push current_cell
 		(0...@width).each do |x|
 			(0...@height).each do |y|
-				unvisited_cells.push cell(x, y)
+				all_index_cells << [x, y]
 			end
 		end
-		unvisited_cells.delete current_cell
 		trail = true
-		while !unvisited_cells.empty?
+		while visited_cells.size != @width * @height
 			neighbours = current_cell.neighbours
 			visited_cells.push current_cell
-			unvisited_cells.delete current_cell
 			unvisited_neighbours = (neighbours - visited_cells)
 			if !unvisited_neighbours.empty?
 				stack.push current_cell
@@ -54,14 +52,14 @@ class MazeBTrace < Maze
 				@matrix[inner_i][inner_j] = 0
 				current_cell = random_neighbour
 				visited_cells.push current_cell
-				unvisited_cells.delete current_cell
 			elsif !stack.empty?
 				current_cell = stack.pop
 				trail = false
 			else
-				current_cell = unvisited_cells.suffle.shift
+				unvisited_index_cells = all_index_cells - visited_cells.map { |c| [c.x, c.y] }
+				unvisited_index_cell = unvisited_index_cells.shuffle.shift
+				current_cell = cell(unvisited_index_cell[0], unvisited_index_cell[0])
 				visited_cells.push current_cell
-				unvisited_cells.delete current_cell
 			end
 			visited_cells.uniq!
 		end
