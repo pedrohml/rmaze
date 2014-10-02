@@ -9,7 +9,7 @@ class Maze
 
 	def initialize(width, height)
 		@mirrored = false
-		@height, @width = height, width
+		@height, @width = height.to_i, width.to_i
 		@height_full, @width_full = (1 + 2*@height), (1 + 2*@width)
 		@matrix = []
 		(0...@height_full).each do

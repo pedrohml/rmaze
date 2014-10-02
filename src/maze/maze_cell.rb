@@ -3,7 +3,7 @@ class MazeCell
 
 	def initialize(maze, x, y)
 		@maze = maze
-		@x, @y = x, y
+		@x, @y = x.to_i, y.to_i
 		@x, @y = x % @maze.width, y % @maze.height if @maze.mirrored
 		@hash = "#{@maze.hash}#{@x}#{@y}".to_i
 	end
