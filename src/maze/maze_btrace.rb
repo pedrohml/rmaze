@@ -38,7 +38,6 @@ class MazeBTrace < Maze
 				all_index_cells << [x, y]
 			end
 		end
-		trail = true
 		while visited_cells.size != @width * @height
 			neighbours = current_cell.neighbours
 			visited_cells.push current_cell
@@ -47,14 +46,12 @@ class MazeBTrace < Maze
 				stack.push current_cell
 				random_neighbour = unvisited_neighbours.shuffle.shift
 				i, j = xy_to_ij(random_neighbour.x, random_neighbour.y)
-				@matrix[i][j] = 2 if trail
 				inner_i, inner_j = between_cells(current_cell, random_neighbour)
 				@matrix[inner_i][inner_j] = 0
 				current_cell = random_neighbour
 				visited_cells.push current_cell
 			elsif !stack.empty?
 				current_cell = stack.pop
-				trail = false
 			else
 				unvisited_index_cells = all_index_cells - visited_cells.map { |c| [c.x, c.y] }
 				unvisited_index_cell = unvisited_index_cells.shuffle.shift
