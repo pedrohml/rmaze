@@ -3,6 +3,7 @@ describe MazeCell do
 		@width = 4
 		@height = 4
 		@maze = MazeBTrace.new(@width, @height)
+		@maze_zero = Maze.new(@width, @height)
 	end
 
 	it '#initialize' do
@@ -26,11 +27,21 @@ describe MazeCell do
 		expect(maze_cell).to have_wall_up
 		expect(maze_cell).to have_wall_right
 		expect(maze_cell).to have_wall_down
+		maze_zero_cell = @maze_zero.cell(1, 1)
+		expect(maze_zero_cell).not_to have_wall_left
+		expect(maze_zero_cell).not_to have_wall_up
+		expect(maze_zero_cell).not_to have_wall_right
+		expect(maze_zero_cell).not_to have_wall_down
 	end
 
-	it '#is_confined?' do
-		maze_cell = @maze.cell(0, 0)
-		expect(maze_cell).to be_confined
+	it '#connected?' do
+		expect(@maze.cell(0, 0)).not_to be_connected
+		expect(@maze_zero.cell(1, 0)).to be_connected
+	end
+
+	it '#connected_neighbours' do
+		expect(@maze.cell(0, 0).connected_neighbours).to be_empty
+		expect(@maze_zero.cell(1, 1).connected_neighbours.size).to eq(4)
 	end
 
 	it '#neighbours' do

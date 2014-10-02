@@ -1,23 +1,15 @@
 require 'maze/maze'
 
 class MazeBTrace < Maze
-	def initialize(width, height)
-		super(width, height)
-		initialize_maze
+	protected
+	def initialize_matrix
+		super
+		make_unconnected
 	end
 
-	def initialize_maze
-		(0...@height_full).each do |i|
-			(0...@width_full).each do |j|
-				@matrix[i][j] = 1
-			end
-		end
-		(0...@width).each do |x|
-			(0...@height).each do |y|
-				i, j = xy_to_ij(x, y)
-				@matrix[i][j] = 0
-			end
-		end
+	public
+	def initialize(width, height)
+		super(width, height)
 	end
 
 	def between_cells(cell_a, cell_b)

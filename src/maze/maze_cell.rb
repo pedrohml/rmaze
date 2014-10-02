@@ -51,12 +51,21 @@ class MazeCell
 		@maze.value(i + 1, j) != 0
 	end
 
-	def confined?
-		has_wall_left? && has_wall_up? && has_wall_right? && has_wall_down?
+	def connected?
+		!(has_wall_left? && has_wall_up? && has_wall_right? && has_wall_down?)
 	end
 
 	def neighbours
 		[left, up, right, down].compact
+	end
+
+	def connected_neighbours
+		neighbours = []
+		neighbours << left unless has_wall_left?
+		neighbours << up unless has_wall_up?
+		neighbours << right unless has_wall_right?
+		neighbours << down unless has_wall_down?
+		neighbours
 	end
 
 	def hash
