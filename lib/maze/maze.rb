@@ -39,7 +39,7 @@ class Maze
 	end
 
 	def matrix
-		matrix.freeze
+		@matrix.freeze
 	end
 
 	def print
