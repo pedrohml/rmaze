@@ -37,4 +37,4 @@ else
 end
 
 maze.generate
-maze.debug
+maze.print

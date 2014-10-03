@@ -82,10 +82,10 @@ describe MazeCell do
 		expect(maze_cell != nil).to be_truthy
 	end
 
-	it '#debug' do
+	it '#print' do
 		allow($stdout).to receive(:puts).exactly(3).times
 		maze_cell = @maze.cell(0, 0)
-		maze_cell.debug
+		maze_cell.print
 	end
 
 	it '#inspect' do

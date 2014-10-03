@@ -40,8 +40,8 @@ describe Maze do
 		expect(@maze.inspect).to eq("#<Maze: @width=#{@width}, @height=#{@height}>")
 	end
 
-	it '#debug' do
+	it '#print' do
 		allow($stdout).to receive(:puts).exactly(@maze.height_full).times
-		@maze.debug
+		@maze.print
 	end
 end

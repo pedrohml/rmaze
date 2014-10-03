@@ -2,8 +2,6 @@ require 'maze/maze_cell'
 
 class Maze
 	protected
-	attr_reader :matrix
-
 	def initialize_matrix
 		@matrix = []
 		(0...@height_full).each do
@@ -40,7 +38,11 @@ class Maze
 		@hash = "#{@width}#{@height}".to_i # optimized pre-computed hash
 	end
 
-	def debug
+	def matrix
+		matrix.freeze
+	end
+
+	def print
 		@matrix.each do |row|
 			puts row.join(' ').gsub(/0/, ' ').gsub(/1/, '#').gsub(/2/, 'X')
 		end

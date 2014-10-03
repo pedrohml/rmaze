@@ -8,7 +8,7 @@ class MazeCell
 		@hash = "#{@maze.hash}#{@x}#{@y}".to_i
 	end
 
-	def debug
+	def print
 		i, j = @maze.xy_to_ij(@x, @y)
 		puts "  #{@maze.value(i - 1, j)}  "
 		puts "#{@maze.value(i, j - 1)} #{@maze.value(i, j)} #{@maze.value(i, j + 1)}"
