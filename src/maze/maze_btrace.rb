@@ -23,7 +23,7 @@ class MazeBTrace < Maze
 		stack = []
 		visited_cells = []
 		all_index_cells = []
-		current_cell = cell(0, 0)
+		current_cell = cell(rand(@width), rand(@height))
 		visited_cells.push current_cell
 		(0...@width).each do |x|
 			(0...@height).each do |y|
