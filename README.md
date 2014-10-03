@@ -1,4 +1,4 @@
-maze
+Maze
 ====
 
-Maze generation script
+Ruby library for maze generation
