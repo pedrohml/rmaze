@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require './src/init.rb'
+require './lib/init.rb'
 require 'optparse'
 
 options = {

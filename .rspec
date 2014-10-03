@@ -1,1 +1,1 @@
--c -r ./spec/spec_helper.rb -r ./src/init.rb
+-c -r ./spec/spec_helper.rb -r ./lib/init.rb
