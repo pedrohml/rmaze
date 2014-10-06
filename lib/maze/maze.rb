@@ -28,7 +28,7 @@ class Maze
 	end
 
 	public
-	attr_reader :mirrored, :width, :height, :width_full, :height_full
+	attr_reader :mirrored, :width, :height, :width_full, :height_full, :matrix
 
 	def initialize(width, height)
 		@mirrored = false
@@ -36,10 +36,6 @@ class Maze
 		@height_full, @width_full = (1 + 2*@height), (1 + 2*@width)
 		initialize_matrix
 		@hash = "#{@width}#{@height}".to_i # optimized pre-computed hash
-	end
-
-	def matrix
-		@matrix.freeze
 	end
 
 	def print

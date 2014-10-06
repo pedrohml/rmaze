@@ -67,6 +67,11 @@ class MazeCell
 		neighbours << down unless has_wall_down?
 		neighbours
 	end
+	
+	def value
+		i, j = xy_to_ij(@x, @y)
+		@maze.value(i, j)
+	end
 
 	def hash
 		@hash
