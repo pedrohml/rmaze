@@ -12,4 +12,5 @@ Gem::Specification.new do |s|
 	s.test_files    = `git ls-files -- spec/*`.split("\n")
 	s.homepage    = 'https://github.com/pedrohml/rmaze'
 	s.require_paths = ["lib"]
+	s.add_runtime_dependency 'rubytree', '~> 0.9'
 end
