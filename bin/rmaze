@@ -9,7 +9,7 @@ options = {
 	:algorithm => :backtrace
 }
 OptionParser.new do |opts|
-	opts.banner = "Usage: maze_gen.rb [options]"
+	opts.banner = "Usage: rmaze [options]"
 
 	opts.separator ""
 	opts.separator "Basic options:"
