@@ -2,6 +2,7 @@
 Ruby library and tool for 2D maze generation
 
 [![Build Status](http://travis-ci.org/pedrohml/rmaze.svg?branch=master)](http://travis-ci.org/pedrohml/rmaze)
+[![Coverage Status](https://img.shields.io/coveralls/pedrohml/rmaze.png)](https://coveralls.io/github/pedrohml/rmaze)
 [![Security](http://hakiri.io/github/pedrohml/rmaze/master.svg)](https://hakiri.io/github/pedrohml/rmaze/master)
 
 #### Description
