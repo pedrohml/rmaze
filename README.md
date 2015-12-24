@@ -1,7 +1,8 @@
 # RMaze
 Ruby library and tool for 2D maze generation
 
-[![Build Status](http://travis-ci.org/pedrohml/rmaze.svg?branch=master)](http://travis-ci.org/pedrohml/rmaze)
+[![Gem Version](https://img.shields.io/gem/v/rmaze.png)](https://rubygems.org/gems/rmaze)
+[![Build Status](http://travis-ci.org/pedrohml/rmaze.png)](http://travis-ci.org/pedrohml/rmaze)
 [![Coverage Status](https://img.shields.io/coveralls/pedrohml/rmaze.png)](https://coveralls.io/github/pedrohml/rmaze)
 [![Security](http://hakiri.io/github/pedrohml/rmaze/master.svg)](https://hakiri.io/github/pedrohml/rmaze/master)
 
@@ -12,7 +13,7 @@ This simple library/tool generates 2D mazes with customizable dimensions.
 The **rmaze** is in initial version and its simple to use
 
 ```
-Usage: rmaze.rb [options]
+Usage: rmaze [options]
 
 Basic options:
     -w, --width width                Specify the maze width (default: 10)
