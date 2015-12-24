@@ -79,7 +79,7 @@ class MazeCell
 
 	def eql?(object)
 		if (object.class == self.class)
-			 @x == object.x && @y == object.y && @maze == object.maze
+			 @maze == object.maze && @x == object.x && @y == object.y
 		elsif
 			super(object)
 		end
@@ -90,7 +90,7 @@ class MazeCell
 	end
 
 	def !=(object)
-		!(self.eql? object)
+		not self.eql? object
 	end
 
 	def inspect

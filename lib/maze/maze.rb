@@ -9,7 +9,8 @@ class Maze
 		end
 	end
 
-	def make_value(value = 0)
+	def make_raw_value(value = 0)
+		# process maze cells and walls
 		(0...@height_full).each do |i|
 			(0...@width_full).each do |j|
 				@matrix[i][j] = value
@@ -18,11 +19,13 @@ class Maze
 	end
 
 	def make_unconnected
-		make_value(1)
+		make_raw_value(1) # fill maze with walls and none cells
+
+		# process only maze cells
 		(0...@width).each do |x|
 			(0...@height).each do |y|
 				i, j = xy_to_ij(x, y)
-				@matrix[i][j] = 0
+				@matrix[i][j] = 0 # create empty cell
 			end
 		end
 	end
@@ -39,9 +42,7 @@ class Maze
 	end
 
 	def print
-		@matrix.each do |row|
-			puts row.join(' ').gsub(/0/, ' ').gsub(/1/, '#').gsub(/2/, 'X')
-		end
+		puts self.to_s
 		self
 	end
 
@@ -66,6 +67,15 @@ class Maze
 
 	def hash
 		@hash
+	end
+
+	def to_s
+		output = ''
+		@matrix.each_with_index do |row, idx|
+			output += row.join(' ').gsub(/0/, ' ').gsub(/1/, '#').gsub(/2/, 'X')
+			output += "\n" if idx < @matrix.length - 1
+		end
+		output
 	end
 
 	def inspect
