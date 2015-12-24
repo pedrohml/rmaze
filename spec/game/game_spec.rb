@@ -16,17 +16,17 @@ describe Game do
 		expect(maze.matrix.flatten).to include(2)
 	end
 
-	it '#generate_goal :easy' do
+	it '#generate_goal :medium' do
 		maze = @game.generate_goal(:medium)
 		expect(maze.matrix.flatten).to include(2)
 	end
 
-	it '#generate_goal :easy' do
+	it '#generate_goal :hard' do
 		maze = @game.generate_goal(:hard)
 		expect(maze.matrix.flatten).to include(2)
 	end
 
-	it '#generate_goal :easy' do
+	it '#generate_goal :random' do
 		maze = @game.generate_goal(:random)
 		expect(maze.matrix.flatten).to include(2)
 	end

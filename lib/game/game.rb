@@ -17,13 +17,13 @@ class Game
 		depths = leafs.keys.sort
 		case dificulty
 		when :easy
-			selected_depth = depths[(depths.size*0.25).ceil]
+			selected_depth = depths[(depths.size/4).ceil]
 		when :medium
-			selected_depth = depths[(depths.size*0.5).ceil]
+			selected_depth = depths[(depths.size/2).ceil]
 		when :hard
 			selected_depth = depths.last
 		else
-			selected_depth = depths[rand((depths.size/2.0).ceil) + (depths.size/2.0).ceil]
+			selected_depth = depths[(depths.size/2.0).floor + rand((depths.size/2.0).round)]
 		end
 		leafs[selected_depth].content
 	end
