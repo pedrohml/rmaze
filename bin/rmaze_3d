@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+require './lib/rmaze.rb'
+require 'optparse'
+
+options = {
+	:width => 10,
+	:height => 10,
+	:depth => 10,
+	:view => 0,
+	:algorithm => :backtrace
+}
+OptionParser.new do |opts|
+	opts.banner = "Usage: rmaze [options]"
+
+	opts.separator ""
+	opts.separator "Basic options:"
+	opts.on("-w", "--width width", "Specify the maze width (default: #{options[:width]})") do |width|
+		options[:width] = width
+	end
+	opts.on("-h", "--height height", "Specify the maze height (default: #{options[:height]})") do |height|
+		options[:height] = height
+	end
+	opts.on("-d", "--depth depth", "Specify the maze depth (default: #{options[:depth]})") do |depth|
+		options[:depth] = depth
+	end
+	opts.on("-v", "--view view", "Set the slice z to show (default: #{options[:view]})") do |view|
+		options[:view] = view
+	end
+
+	opts.separator ""
+	opts.separator "Algorithms:"
+	opts.on("-b", "--backtrace", "Choose backtrace algorithm (default)") do |bt|
+		options[:algorithm] = bt ? :backtrace : nil
+	end
+end.parse!
+
+maze = nil
+case options[:algorithm]
+when :backtrace
+	maze = MazeBTrace3D.new(options[:width], options[:height], options[:depth])
+else
+	$stderr.puts "Error: the algorithm must be set."
+	exit(-1)
+end
+
+maze.generate
+# maze.print(options[:view].to_i)
+# maze.raw_print_all
+maze.print_all
+# puts JSON.unparse(maze.matrix)

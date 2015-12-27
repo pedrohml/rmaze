@@ -47,7 +47,7 @@ class MazeBTrace < Maze
 			else
 				unvisited_index_cells = all_index_cells - visited_cells.map { |c| [c.x, c.y] }
 				unvisited_index_cell = unvisited_index_cells.shuffle.shift
-				current_cell = cell(unvisited_index_cell[0], unvisited_index_cell[0])
+				current_cell = cell(unvisited_index_cell[0], unvisited_index_cell[1])
 				visited_cells.push current_cell
 			end
 			visited_cells.uniq!
