@@ -1,88 +1,89 @@
 class MazeCell
-	attr_reader :maze, :x, :y
+	attr_reader :maze, :coords
 
-	def initialize(maze, x, y)
-		@maze = maze
-		@x, @y = x.to_i, y.to_i
-		@x, @y = x % @maze.width, y % @maze.height if @maze.mirrored
-		@hash = "#{@maze.hash}#{@x}#{@y}".to_i
+	def initialize(*params)
+		params = params.clone
+		@maze = params.shift
+		@coords = params.map { |c| c.to_i }
+		@hash = "#{@maze.hash}#{ @coords.reduce(""){ |accum, c| "#{accum}#{c}" }.to_i }".to_i
 	end
 
-	def print
-		i, j = @maze.xy_to_ij(@x, @y)
-		puts "  #{@maze.value(i - 1, j)}  "
-		puts "#{@maze.value(i, j - 1)} #{@maze.value(i, j)} #{@maze.value(i, j + 1)}"
-		puts "  #{@maze.value(i + 1, j)}  "
+	def value
+		@maze.get_value *@coords
 	end
 
-	def left
-		MazeCell.new(@maze, @x - 1, @y) if @maze.mirrored || @x > 0
+	def backward(dimension_index)
+		coords = @coords.clone
+		coords[dimension_index] -= 1
+		params = coords.clone
+		params.unshift @maze
+		MazeCell.new *params if @coords[dimension_index] > 0
 	end
 
-	def up
-		MazeCell.new(@maze, @x, @y - 1) if @maze.mirrored || @y > 0
+	def forward(dimension_index)
+		coords = @coords.clone
+		coords[dimension_index] += 1
+		params = coords.clone
+		params.unshift @maze
+		MazeCell.new *params if @coords[dimension_index] < (@maze.dimensions[dimension_index] - 1)
 	end
 
-	def right
-		MazeCell.new(@maze, @x + 1, @y) if @maze.mirrored || @x < (@maze.width - 1)
+	def has_wall_forward(dimension_index)
+		coords = @coords.clone
+		indices = @maze.coords_to_indices *coords
+		indices[dimension_index] += 1
+		coords[dimension_index] += 1
+		coords[dimension_index] >= @maze.dimensions[dimension_index] or @maze.get_raw_value(*indices) == 1 
 	end
 
-	def down
-		MazeCell.new(@maze, @x, @y + 1) if @maze.mirrored || @y < (@maze.height - 1)
-	end
-
-	def has_wall_left?
-		i, j = @maze.xy_to_ij(@x, @y)
-		@maze.value(i, j - 1) != 0
-	end
-
-	def has_wall_up?
-		i, j = @maze.xy_to_ij(@x, @y)
-		@maze.value(i - 1, j) != 0
-	end
-
-	def has_wall_right?
-		i, j = @maze.xy_to_ij(@x, @y)
-		@maze.value(i, j + 1) != 0
-	end
-
-	def has_wall_down?
-		i, j = @maze.xy_to_ij(@x, @y)
-		@maze.value(i + 1, j) != 0
+	def has_wall_backward(dimension_index)
+		coords = @coords.clone
+		indices = @maze.coords_to_indices *coords
+		indices[dimension_index] -= 1
+		coords[dimension_index] -= 1
+		coords[dimension_index] < 0 or @maze.get_raw_value(*indices) == 1 
 	end
 
 	def connected?
-		!(has_wall_left? && has_wall_up? && has_wall_right? && has_wall_down?)
+		has_wall = true
+		(0...@maze.dimensions.length).each do |d|
+			has_wall = has_wall && has_wall_forward(d) && has_wall_backward(d)
+			break unless has_wall
+		end
+		not has_wall
 	end
 
 	def neighbours
-		[left, up, right, down].compact
+		(0...@maze.dimensions.length).map { |d| [forward(d), backward(d)] }.flatten.compact
 	end
 
 	def connected_neighbours
 		neighbours = []
-		neighbours << left unless has_wall_left?
-		neighbours << up unless has_wall_up?
-		neighbours << right unless has_wall_right?
-		neighbours << down unless has_wall_down?
+		(0...@maze.dimensions.length).each do |d|
+			neighbours << forward(d) unless has_wall_forward(d)
+			neighbours << backward(d) unless has_wall_backward(d)
+		end
 		neighbours
 	end
 	
-	def value
-		i, j = xy_to_ij(@x, @y)
-		@maze.value(i, j)
-	end
-
 	def hash
 		@hash
 	end
 
 	def eql?(object)
 		if (object.class == self.class)
-			 @maze == object.maze && @x == object.x && @y == object.y
+			eq = (@maze == object.maze)
+			@coords.each_with_index do |c, c_idx|
+				eq = eq && c == object[c_idx]
+			end
+			eq
 		elsif
 			super(object)
 		end
+	end
+
+	def [](dimension_index)
+		@coords[dimension_index]
 	end
 
 	def ==(object)
@@ -94,6 +95,11 @@ class MazeCell
 	end
 
 	def inspect
-		"#<#{self.class}: @maze=#{@maze.inspect}, @x=#{@x}, @y=#{@y}>"
+		unless @inspect
+			c_index = 0
+			coord_list = @coords.map { |c| "@c#{c_index+=1}=#{c}" }
+			@inspect = "#<#{self.class}: @maze=#{@maze.inspect}, #{coord_list.join(', ')}>"
+		end
+		@inspect
 	end
 end

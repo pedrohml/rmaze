@@ -2,46 +2,101 @@ describe MazeCell do
 	before do
 		@width = 4
 		@height = 4
-		@maze = MazeBTrace.new(@width, @height)
-		@maze_zero = Maze.new(@width, @height)
+		@maze = Maze.new(@width, @height)
 	end
 
 	it '#initialize' do
+		coords = [1, 0]
+		indices = @maze.coords_to_indices *coords
+		params = indices.clone
+		params.push rand(99)
+		@maze.set_raw_value *params
 		maze_cell = MazeCell.new(@maze, 1, 0)
 		expect(maze_cell.maze).to eq(@maze)
-		expect(maze_cell.x).to eq(1)
-		expect(maze_cell.y).to eq(0)
+		expect(maze_cell.coords[0]).to eq(1)
+		expect(maze_cell.coords[1]).to eq(0)
+		expect(maze_cell.value).to eq(params.last)
 	end
 
-	it 'gets directions' do
-		maze_cell = @maze.cell(0, 0)
-		expect(maze_cell.left).to be_nil
-		expect(maze_cell.up).to be_nil
-		expect(maze_cell.right).to eq(@maze.cell(1, 0))
-		expect(maze_cell.down).to eq(@maze.cell(0, 1))
+	it '#value' do
+		coords = [0, 0]
+		params = coords.clone
+		params.push rand(99)
+		@maze.set_value *params
+		maze_cell = @maze.cell *coords
+		expect(maze_cell.value).to eq(params.last)
 	end
 
-	it 'checks wall' do
-		maze_cell = @maze.cell(0, 0)
-		expect(maze_cell).to have_wall_left
-		expect(maze_cell).to have_wall_up
-		expect(maze_cell).to have_wall_right
-		expect(maze_cell).to have_wall_down
-		maze_zero_cell = @maze_zero.cell(1, 1)
-		expect(maze_zero_cell).not_to have_wall_left
-		expect(maze_zero_cell).not_to have_wall_up
-		expect(maze_zero_cell).not_to have_wall_right
-		expect(maze_zero_cell).not_to have_wall_down
+	it '#forward' do
+		maze_cell = @maze.cell 1, 1
+		expect(maze_cell.forward(0)).to eq(@maze.cell(2, 1))
+		expect(maze_cell.forward(1)).to eq(@maze.cell(1, 2))
+	end
+
+	it '#backward' do
+		maze_cell = @maze.cell 1, 1
+		expect(maze_cell.backward(0)).to eq(@maze.cell(0, 1))
+		expect(maze_cell.backward(1)).to eq(@maze.cell(1, 0))
+	end
+
+	it '#has_wall_forward' do
+		@maze.set_raw_value_all 1
+		coords = [1, 1]
+		maze_cell = @maze.cell *coords
+		indices = @maze.coords_to_indices *coords
+		params = indices.clone
+		params[1] += 1
+		params.push 0
+		@maze.set_raw_value *params
+		expect(maze_cell.has_wall_forward(0)).to be_truthy
+		expect(maze_cell.has_wall_forward(1)).to be_falsy
+	end
+
+	it '#has_wall_backward' do
+		@maze.set_raw_value_all 1
+		coords = [1, 1]
+		maze_cell = @maze.cell *coords
+		indices = @maze.coords_to_indices *coords
+		params = indices.clone
+		params[1] -= 1
+		params.push 0
+		@maze.set_raw_value *params
+		expect(maze_cell.has_wall_backward(0)).to be_truthy
+		expect(maze_cell.has_wall_backward(1)).to be_falsy
+	end
+
+	it '#has_wall_forward on border' do
+		@maze.set_raw_value_all 1
+		coords = [@maze.dimensions[0] - 1, @maze.dimensions[1] - 1]
+		maze_cell = @maze.cell *coords
+		expect(maze_cell.has_wall_forward(0)).to be_truthy
+		expect(maze_cell.has_wall_forward(1)).to be_truthy
+	end
+
+	it '#has_wall_backward on border' do
+		@maze.set_raw_value_all 1
+		coords = [0, 0]
+		maze_cell = @maze.cell *coords
+		expect(maze_cell.has_wall_backward(0)).to be_truthy
+		expect(maze_cell.has_wall_backward(1)).to be_truthy
 	end
 
 	it '#connected?' do
-		expect(@maze.cell(0, 0)).not_to be_connected
-		expect(@maze_zero.cell(1, 0)).to be_connected
-	end
+		coords = [0, 0]
+		@maze.set_raw_value_all 0
+		maze_cell = @maze.cell *coords
+		expect(maze_cell).to be_connected
 
-	it '#connected_neighbours' do
-		expect(@maze.cell(0, 0).connected_neighbours).to be_empty
-		expect(@maze_zero.cell(1, 1).connected_neighbours.size).to eq(4)
+		@maze.set_raw_value_all 1
+		maze_cell = @maze.cell *coords
+		expect(maze_cell).not_to be_connected
+
+		indices = @maze.coords_to_indices *coords
+		params = indices.clone
+		params[1] += 1
+		params.push 0
+		@maze.set_raw_value *params
+		expect(maze_cell).to be_connected
 	end
 
 	it '#neighbours' do
@@ -51,6 +106,14 @@ describe MazeCell do
 		expect(neighbours).to include(@maze.cell(1, 0))
 		expect(neighbours).to include(@maze.cell(0, 1))
 		expect(neighbours).not_to include(@maze.cell(0, 0))
+	end
+
+	it '#connected_neighbours' do
+		@maze.set_raw_value_all 1
+		expect(@maze.cell(0, 0).connected_neighbours).to be_empty
+
+		@maze.set_raw_value_all 0
+		expect(@maze.cell(0, 0).connected_neighbours).to eq([@maze.cell(1, 0), @maze.cell(0, 1)])
 	end
 
 	it '#hash' do
@@ -82,14 +145,8 @@ describe MazeCell do
 		expect(maze_cell != nil).to be_truthy
 	end
 
-	it '#print' do
-		allow($stdout).to receive(:puts).exactly(3).times
-		maze_cell = @maze.cell(0, 0)
-		maze_cell.print
-	end
-
 	it '#inspect' do
 		maze_cell = @maze.cell(1, 0)
-		expect(maze_cell.inspect).to eq("#<MazeCell: @maze=#{@maze.inspect}, @x=#{1}, @y=#{0}>")
+		expect(maze_cell.inspect).to eq("#<MazeCell: @maze=#{@maze.inspect}, @c1=#{1}, @c2=#{0}>")
 	end
 end

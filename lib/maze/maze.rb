@@ -2,11 +2,21 @@ require 'maze/maze_cell'
 
 class Maze
 	protected
-	def initialize_matrix
-		@matrix = []
-		(0...@height_full).each do
-			@matrix << [0]*@width_full
+	def allocate(value = 0)
+		axis = []
+		axis_before = []
+		@raw_dimensions.reverse.each_with_index do |dr, dr_index|
+			axis = []
+			if dr_index == 0
+				axis = [value] * dr
+			else
+				(0...dr).each do
+					axis << axis_before.clone
+				end
+			end
+			axis_before = axis
 		end
+		@matrix = axis
 	end
 
 	def make_raw_value(value = 0)
@@ -31,54 +41,67 @@ class Maze
 	end
 
 	public
-	attr_reader :mirrored, :width, :height, :width_full, :height_full, :matrix
+	attr_reader :dimensions, :width_full, :height_full, :matrix
 
-	def initialize(width, height)
-		@mirrored = false
-		@height, @width = height.to_i, width.to_i
-		@height_full, @width_full = (1 + 2*@height), (1 + 2*@width)
-		initialize_matrix
-		@hash = "#{@width}#{@height}".to_i # optimized pre-computed hash
+	def initialize(*dimensions)
+		@dimensions = dimensions.map { |d| d.to_i }.freeze
+		@raw_dimensions = @dimensions.map { |d| 1 + 2*d }.freeze
+		allocate 0
+		@hash = @dimensions.reduce(""){ |accum, d| "#{accum}#{d}" }.to_i
 	end
 
-	def print
-		puts self.to_s
-		self
+	def coords_to_indices(*coords)
+		coords.clone.map { |c| 1 + 2 * c }
 	end
 
-	def value(i, j)
-		@matrix[i][j]
+	def get_raw_value(*indices)
+		matrix_aux = @matrix
+		indices.each_with_index do |c|
+			matrix_aux = matrix_aux[c]
+		end
+		matrix_aux
 	end
 
-	def cell(x, y)
-		MazeCell.new(self, x, y)
+	def set_raw_value(*indices)
+		matrix_aux = @matrix
+		indices = indices.clone
+		value = indices.pop
+		indices.each_with_index do |c, c_index|
+			matrix_aux[c] = value if c_index == indices.length - 1
+			matrix_aux = matrix_aux[c]
+		end
+		matrix_aux
 	end
 
-	def xy_to_ij(x, y)
-		x, y = x % @width, y % @height if @mirrored
-		i = 1 + (2 * y)
-		j = 1 + (2 * x)
-		[i, j]
+	def set_raw_value_all(value)
+		allocate value
 	end
 
-	def generate
-		self
+	def get_value(*coords)
+		get_raw_value *self.coords_to_indices(*coords)
+	end
+
+	def set_value(*coords)
+		value = coords.pop
+		set_raw_value *self.coords_to_indices(*coords).push(value)
+	end
+
+	def cell(*coords)
+		params = coords.clone
+		params.unshift self
+		MazeCell.new *params
 	end
 
 	def hash
 		@hash
 	end
 
-	def to_s
-		output = ''
-		@matrix.each_with_index do |row, idx|
-			output += row.join(' ').gsub(/0/, ' ').gsub(/1/, '#').gsub(/2/, 'X')
-			output += "\n" if idx < @matrix.length - 1
-		end
-		output
-	end
-
 	def inspect
-		"#<#{self.class}: @width=#{@width}, @height=#{@height}>"
+		if not @inspect
+			d_index = 0
+			dimension_list = @dimensions.map { |d| "@d#{d_index+=1}=#{d}" }
+			@inspect = "#<#{self.class}: #{dimension_list.join(', ')}>"
+		end
+		@inspect
 	end
 end
