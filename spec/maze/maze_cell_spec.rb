@@ -99,6 +99,18 @@ describe MazeCell do
 		expect(maze_cell).to be_connected
 	end
 
+	it '#connected? (3x3)' do
+        maze = Maze.new 3, 3
+		maze.set_raw_value_all 1
+        maze_cell1 = maze.cell 1, 1
+        maze_cell2 = maze.cell 1, 2
+        maze.set_value 1, 1, 0
+        maze.set_value 1, 2, 0
+        maze.connect_cells maze_cell1, maze_cell2
+
+		expect(maze_cell1).to be_connected
+	end
+
 	it '#neighbours' do
 		maze_cell = @maze.cell(0, 0)
 		neighbours = maze_cell.neighbours

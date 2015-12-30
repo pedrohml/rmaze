@@ -20,6 +20,34 @@ describe Maze do
 		end
 	end
 
+	it '#total_cells 2d' do
+		maze = Maze.new 4, 8
+        expect(maze.total_cells).to eq(32)
+	end
+
+	it '#total_cells Nd' do
+		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		maze = Maze.new *dimensions
+        expect(maze.total_cells).to eq(maze.dimensions.reduce(1) { |accum, d| accum*d })
+	end
+
+	it '#total_raw 2d' do
+		maze = Maze.new 4, 8
+        expect(maze.total_raw).to eq(9*17)
+	end
+
+    it '#cells 2d (0)' do
+		maze = Maze.new 2, 2
+        expect(maze.cells.length).to eq(4)
+        expect(maze.cells).to eq([[0, 0], [0, 1], [1, 0], [1, 1]].map { |coord| maze.cell *coord })
+    end
+
+    it '#cells 2d (1)' do
+		maze = Maze.new 5, 4
+        expect(maze.cells.length).to eq(20)
+        expect(maze.cells).to eq([[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[3,0],[3,1],[3,2],[3,3],[4,0],[4,1],[4,2],[4,3]].map { |coord| maze.cell *coord })
+    end
+
 	it '#coords_to_indices 2d' do
 		maze = Maze.new 4, 8
 		x, y = 2, 3
@@ -143,6 +171,34 @@ describe Maze do
 			expect(cell[c_index]).to eq(c)
 		end
 	end
+
+    it '#between_cells 2d' do
+		maze = Maze.new 4, 8
+        cell_a = maze.cell 1, 1
+        cell_b = maze.cell 2, 3
+        expect(maze.between_cells(cell_a, cell_b)).to eq([4.0, 5.0])
+        expect(maze.between_cells(cell_a, cell_a)).to eq([3.0, 3.0])
+    end
+
+    it '#connect_cells 2d' do
+		maze = Maze.new 4, 8
+        maze.set_raw_value_all 1
+        cell_a = maze.cell 1, 1
+        cell_b = maze.cell 2, 3
+        indices = maze.between_cells cell_a, cell_b
+        expect(maze.connect_cells(cell_a, cell_b)).to eq(indices)
+        expect(maze.get_raw_value(*indices)).to eq(0)
+    end
+
+    it '#disconnect_cells 2d' do
+		maze = Maze.new 4, 8
+        maze.set_raw_value_all 0
+        cell_a = maze.cell 1, 1
+        cell_b = maze.cell 2, 3
+        indices = maze.between_cells cell_a, cell_b
+        expect(maze.disconnect_cells(cell_a, cell_b)).to eq(indices)
+        expect(maze.get_raw_value(*indices)).to eq(1)
+    end
 
 	it '#hash 2d' do
 		maze = Maze.new 4, 8

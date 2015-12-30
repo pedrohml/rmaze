@@ -29,19 +29,15 @@ class MazeCell
 	end
 
 	def has_wall_forward(dimension_index)
-		coords = @coords.clone
-		indices = @maze.coords_to_indices *coords
+		indices = @maze.coords_to_indices *@coords
 		indices[dimension_index] += 1
-		coords[dimension_index] += 1
-		coords[dimension_index] >= @maze.dimensions[dimension_index] or @maze.get_raw_value(*indices) == 1 
+		@coords[dimension_index] >= @maze.dimensions[dimension_index] - 1 or @maze.get_raw_value(*indices) == 1
 	end
 
 	def has_wall_backward(dimension_index)
-		coords = @coords.clone
-		indices = @maze.coords_to_indices *coords
+		indices = @maze.coords_to_indices *@coords
 		indices[dimension_index] -= 1
-		coords[dimension_index] -= 1
-		coords[dimension_index] < 0 or @maze.get_raw_value(*indices) == 1 
+		@coords[dimension_index] <= 0 or @maze.get_raw_value(*indices) == 1
 	end
 
 	def connected?

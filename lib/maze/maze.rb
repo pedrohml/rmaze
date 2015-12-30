@@ -19,26 +19,33 @@ class Maze
 		@matrix = axis
 	end
 
-	def make_raw_value(value = 0)
-		# process maze cells and walls
-		(0...@height_full).each do |i|
-			(0...@width_full).each do |j|
-				@matrix[i][j] = value
-			end
-		end
-	end
+    def set_between_cells(cell_a, cell_b, value)
+        indices = between_cells cell_a, cell_b
+        params = indices.clone
+        params.push value
+        set_raw_value *params
+        indices
+    end
 
-	def make_unconnected
-		make_raw_value(1) # fill maze with walls and none cells
-
-		# process only maze cells
-		(0...@width).each do |x|
-			(0...@height).each do |y|
-				i, j = xy_to_ij(x, y)
-				@matrix[i][j] = 0 # create empty cell
-			end
-		end
-	end
+    def evaluate_indices(dim_sizes)
+        matrix_aux = @matrix
+        indices = []
+        stack = []
+        begin
+            if not stack.empty? and stack.last >= dim_sizes[stack.length - 1]
+                stack.pop
+                stack[-1] += 1 if not stack.empty?
+            elsif stack.length < dim_sizes.length - 1
+                matrix_before = matrix_aux
+                stack.push 0
+                matrix_aux = matrix_aux[stack.last]
+            else
+                (0...dim_sizes.last).each { |d| indices.push(stack + [d]) }
+                stack[-1] += 1
+            end
+        end until stack.empty?
+        indices
+    end
 
 	public
 	attr_reader :dimensions, :width_full, :height_full, :matrix
@@ -50,8 +57,16 @@ class Maze
 		@hash = @dimensions.reduce(""){ |accum, d| "#{accum}#{d}" }.to_i
 	end
 
+    def total_cells
+        dimensions.reduce(1) { |accum, d| accum*d }
+    end
+
+    def total_raw
+        dimensions.reduce(1) { |accum, d| accum*(1 + 2*d) }
+    end
+
 	def coords_to_indices(*coords)
-		coords.clone.map { |c| 1 + 2 * c }
+		coords.map { |c| 1 + 2 * c }
 	end
 
 	def get_raw_value(*indices)
@@ -82,6 +97,7 @@ class Maze
 	end
 
 	def set_value(*coords)
+        coords = coords.clone
 		value = coords.pop
 		set_raw_value *self.coords_to_indices(*coords).push(value)
 	end
@@ -91,6 +107,24 @@ class Maze
 		params.unshift self
 		MazeCell.new *params
 	end
+
+    def cells
+        evaluate_indices(@dimensions).map { |coord| cell *coord }
+    end
+
+	def between_cells(cell_a, cell_b)
+		indices_a = coords_to_indices *cell_a.coords
+		indices_b = coords_to_indices *cell_b.coords
+        indices_a.zip(indices_b).map { |pair| (pair[0] + pair[1]) / 2.0 }
+	end
+
+    def connect_cells(cell_a, cell_b)
+        set_between_cells cell_a, cell_b, 0
+    end
+
+    def disconnect_cells(cell_a, cell_b)
+        set_between_cells cell_a, cell_b, 1
+    end
 
 	def hash
 		@hash
