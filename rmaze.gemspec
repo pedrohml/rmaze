@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
 	s.name        = 'rmaze'
-	s.version     = '2.0.0'
+	s.version     = '2.1.0'
 	s.date        = '2014-10-01'
 	s.licenses    = ["MIT"]
 	s.platform    = Gem::Platform::RUBY

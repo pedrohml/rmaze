@@ -8,4 +8,5 @@ gem 'json', '~> 1.8.1'
 group :test do
 	gem 'rspec', '~> 3.1.0'
 	gem 'coveralls', require: false
+	gem 'pry'
 end

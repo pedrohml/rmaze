@@ -1,7 +1,7 @@
 describe Maze do
 	it '#initialize 2d' do
-		width = rand(10) + 15
-		height = rand(10) + 15
+		width = rand(3) + 15
+		height = rand(3) + 15
 		maze = Maze.new(width, height)
 		expect(maze.dimensions[0]).to eq(width)
 		expect(maze.dimensions[1]).to eq(height)
@@ -10,7 +10,7 @@ describe Maze do
 	end
 
 	it '#initialize Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		matrix_iter = maze.matrix
 		dimensions.each_with_index do |d, d_index|
@@ -20,13 +20,25 @@ describe Maze do
 		end
 	end
 
+	it '#self.from_array 2d' do
+		maze = Maze.new 4, 8
+		maze.set_raw_value_all 1
+		maze.set_value 1, 1, 0
+		maze_clone = Maze.from_array maze.matrix
+		expect(maze.matrix).to eq(maze_clone.matrix)
+		maze_clone.set_value 1, 1, 1
+		expect(maze.matrix).not_to eq(maze_clone.matrix)
+		maze_clone.set_raw_value_all 0
+		expect(maze.matrix).not_to eq(maze_clone.matrix)
+	end
+
 	it '#total_cells 2d' do
 		maze = Maze.new 4, 8
         expect(maze.total_cells).to eq(32)
 	end
 
 	it '#total_cells Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
         expect(maze.total_cells).to eq(maze.dimensions.reduce(1) { |accum, d| accum*d })
 	end
@@ -63,7 +75,7 @@ describe Maze do
 	end
 
 	it '#coords_to_indices Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		indices = maze.coords_to_indices *coords
@@ -76,7 +88,7 @@ describe Maze do
 	end
 
 	it '#get_raw_value Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		indices = maze.coords_to_indices *coords
@@ -92,7 +104,7 @@ describe Maze do
 	end
 
 	it '#set_raw_value Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		value = rand(99) + 1
@@ -112,7 +124,7 @@ describe Maze do
 	end
 
 	it '#set_raw_value_all Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		maze.set_raw_value_all 11
 		coords = maze.dimensions.map { |d| rand(d) }
@@ -126,7 +138,7 @@ describe Maze do
 	end
 
 	it '#get_value Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		expect(maze.get_value(*coords)).to eq(0)
@@ -141,7 +153,7 @@ describe Maze do
 	end
 
 	it '#set_value Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		value = rand(99) + 1
@@ -161,7 +173,7 @@ describe Maze do
 	end
 
 	it '#cell Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		coords = dimensions.map { |d| rand(d) }
 		cell = maze.cell *coords
@@ -211,7 +223,7 @@ describe Maze do
 		maze = Maze.new 2, 2, 2
 		maze.set_raw_value_all 1
 		maze.set_value 1, 1, 1, 0
-		expect(maze.to_json).to eq('[[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]]]')
+		expect(maze.to_json).to eq('[[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,0,1],[1,1,1,1,1]],[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]]')
 	end
 
 	it '#hash 2d' do
@@ -220,7 +232,7 @@ describe Maze do
 	end
 
 	it '#hash Nd' do
-		dimensions = ([nil]*(rand(10)+3)).map { |_| 1 + rand(4)  }
+		dimensions = ([nil]*(rand(3)+3)).map { |_| 1 + rand(4)  }
 		maze = Maze.new *dimensions
 		expect(maze.hash).to eq(dimensions.reduce(""){ |accum, d| "#{accum}#{d}" }.to_i)
 	end

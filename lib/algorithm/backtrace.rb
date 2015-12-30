@@ -18,7 +18,7 @@ class Backtrace
             @maze.set_value *cell.coords.clone.push(0)
         end
 
-		current_cell = @maze.cell *@maze.dimensions.map { |d| rand(d) }
+		current_cell = all_cells[rand(all_cells.length)]
 		visited_cells.push current_cell
 
 		while visited_cells.size != @maze.total_cells

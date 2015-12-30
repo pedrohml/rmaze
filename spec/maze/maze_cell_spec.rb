@@ -81,7 +81,7 @@ describe MazeCell do
 		expect(maze_cell.has_wall_backward(1)).to be_truthy
 	end
 
-	it '#connected?' do
+	it '#connected? (0)' do
 		coords = [0, 0]
 		@maze.set_raw_value_all 0
 		maze_cell = @maze.cell *coords
@@ -99,7 +99,7 @@ describe MazeCell do
 		expect(maze_cell).to be_connected
 	end
 
-	it '#connected? (3x3)' do
+	it '#connected? (1)' do
         maze = Maze.new 3, 3
 		maze.set_raw_value_all 1
         maze_cell1 = maze.cell 1, 1

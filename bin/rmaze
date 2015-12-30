@@ -20,6 +20,9 @@ OptionParser.new do |opts|
 	opts.on("-h", "--height height", "Specify the maze height (default: #{options[:height]})") do |height|
 		options[:height] = height
 	end
+	opts.on("-d", "--depth depth", "Specify the maze depth (default: #{options[:depth]})") do |depth|
+		options[:depth] = depth
+	end
 	opts.on("-f", "--format format", "Specify the format output (default: #{options[:format]})") do |format|
 		options[:format] = format.to_sym
 	end
@@ -31,7 +34,12 @@ OptionParser.new do |opts|
 	end
 end.parse!
 
-maze = Maze.new options[:width], options[:height]
+if not options[:depth]
+	maze = Maze.new options[:width], options[:height]
+else
+	maze = Maze.new options[:width], options[:height], options[:depth]
+end
+
 maze.set_raw_value_all 1
 
 case options[:algorithm]
@@ -40,13 +48,16 @@ when :backtrace
     backtrace.generate
 else
 	$stderr.puts "Error: the algorithm must be set."
-	exit(-1)
+	exit -1
 end
 
 case options[:format]
 when :ascii
-	maze.matrix.each_with_index do |row, index|
-		puts row.map(&:to_s).join(' ').gsub('0', ' ').gsub('1', '#')
+	maze.matrix.each do |row|
+		row = [row] if maze.dimensions.length == 2
+		row.each do |depth|
+			puts depth.map(&:to_s).join(' ').gsub('0', ' ').gsub('1', '#')
+		end
 	end
 when :json
 	puts maze.to_json

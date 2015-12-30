@@ -11,7 +11,7 @@ class Maze
 				axis = [value] * dr
 			else
 				(0...dr).each do
-					axis << axis_before.clone
+					axis << Marshal.load(Marshal.dump(axis_before)) # deep clone
 				end
 			end
 			axis_before = axis
@@ -48,13 +48,26 @@ class Maze
     end
 
 	public
-	attr_reader :dimensions, :width_full, :height_full, :matrix
+	attr_accessor :matrix
+	attr_reader :dimensions
 
 	def initialize(*dimensions)
 		@dimensions = dimensions.map { |d| d.to_i }.freeze
 		@raw_dimensions = @dimensions.map { |d| 1 + 2*d }.freeze
 		allocate 0
 		@hash = @dimensions.reduce(""){ |accum, d| "#{accum}#{d}" }.to_i
+	end
+
+	def self.from_array(matrix)
+		dimensions = []
+		matrix_aux = matrix
+		while matrix_aux.is_a? Array
+			dimensions.push matrix_aux.length
+			matrix_aux = matrix_aux[0]
+		end
+		maze = Maze.new *dimensions
+		maze.matrix = Marshal.load(Marshal.dump(matrix)) # deep clone
+		maze
 	end
 
     def total_cells
