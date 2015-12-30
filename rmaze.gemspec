@@ -15,4 +15,5 @@ Gem::Specification.new do |s|
 	s.require_paths = ["lib"]
 	s.add_runtime_dependency 'rubytree', '~> 0.9'
 	s.add_runtime_dependency 'OptionParser', '~> 0.5.1'
+	s.add_runtime_dependency 'json', '~> 1.8.1'
 end

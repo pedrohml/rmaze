@@ -126,6 +126,10 @@ class Maze
         set_between_cells cell_a, cell_b, 1
     end
 
+	def to_json
+		JSON.unparse @matrix
+	end
+
 	def hash
 		@hash
 	end
