@@ -27,14 +27,18 @@ OptionParser.new do |opts|
 	end
 end.parse!
 
-maze = nil
+maze = Maze.new options[:width], options[:height]
+maze.set_raw_value_all 1
+
 case options[:algorithm]
 when :backtrace
-	maze = MazeBTrace.new(options[:width], options[:height])
+	backtrace = Backtrace.new maze
+    backtrace.generate
 else
 	$stderr.puts "Error: the algorithm must be set."
 	exit(-1)
 end
 
-maze.generate
-maze.print
+maze.matrix.each_with_index do |row, index|
+    puts row.map(&:to_s).join(' ').gsub('0', ' ').gsub('1', '#')
+end

@@ -7,9 +7,9 @@ class Game
 
 	def select_goal_cell(dificulty)
 		dificulty = dificulty.to_sym
-		solver = TreeSolver.new(@maze)
-		start_x, start_y = 0, 0
-		paths = solver.paths(start_x, start_y)
+		solver = TreeSolver.new @maze
+		start_coords = [0]*@maze.dimensions.length
+		paths = solver.paths *start_coords
 		leafs = {}
 		paths.each_leaf do |leaf|
 			leafs[leaf.node_depth] = leaf
@@ -29,9 +29,11 @@ class Game
 	end
 
 	def generate_goal(dificulty)
-		selected_cell = select_goal_cell(dificulty)
-		i, j = @maze.xy_to_ij(selected_cell.x, selected_cell.y)
-		@maze.matrix[i][j] = 2
+		selected_cell = select_goal_cell dificulty
+		indices = @maze.coords_to_indices *selected_cell.coords
+        params = indices.clone
+        params.push 2
+		@maze.set_raw_value *params
 		@maze
 	end
 end

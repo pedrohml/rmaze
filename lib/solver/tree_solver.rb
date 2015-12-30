@@ -7,13 +7,13 @@ class TreeSolver
 		@maze = maze
 	end
 
-	def paths(start_x, start_y)
-		current_cell = @maze.cell(start_x, start_y)
-		root_node = current_node = Tree::TreeNode.new("#{current_cell.x},#{current_cell.y}", current_cell)
+	def paths(*coords)
+		current_cell = @maze.cell *coords
+		root_node = current_node = Tree::TreeNode.new(current_cell.coords.map(&:to_s).join(','), current_cell)
 		visited_cells = [current_cell]
 		stack_node = []
 		stack_cell = []
-		while visited_cells.size != @maze.width * @maze.height
+		while visited_cells.size != @maze.total_cells
 			neighbours = current_cell.connected_neighbours
 			unvisited_neighbours = neighbours - visited_cells
 			if unvisited_neighbours.size == 0
@@ -25,7 +25,7 @@ class TreeSolver
 				stack_node += [current_node]*unvisited_neighbours.size
 			end
 			visited_cells << current_cell
-			new_node = Tree::TreeNode.new("#{current_cell.x},#{current_cell.y}", current_cell)
+			new_node = Tree::TreeNode.new(current_cell.coords.map(&:to_s).join(','), current_cell)
 			current_node << new_node 
 			current_node = new_node
 		end

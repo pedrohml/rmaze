@@ -1,5 +1,5 @@
 # RMaze
-Ruby library and tool for 2D maze generation
+Ruby library for multidimensional maze generation
 
 [![Gem Version](https://img.shields.io/gem/v/rmaze.svg)](https://rubygems.org/gems/rmaze)
 [![Build Status](https://img.shields.io/travis/pedrohml/rmaze/master.svg)](http://travis-ci.org/pedrohml/rmaze)
@@ -8,10 +8,13 @@ Ruby library and tool for 2D maze generation
 [![License](https://img.shields.io/github/license/pedrohml/rmaze.svg)](https://github.com/pedrohml/rmaze/blob/master/LICENSE.txt)
 
 #### Description
-This simple library/tool generates 2D mazes with customizable dimensions.
+This library generates multidimensional mazes.
+
+- What the purpose ? Mainly, games.
+- What do I want Nth-d mazes for ? I do not know yet.
 
 #### Tool usage
-The **rmaze** is in initial version and its simple to use
+The tool **rmaze** is in initial version and only supports bidimensional mazes.
 
 ```
 Usage: rmaze [options]
