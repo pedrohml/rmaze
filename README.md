@@ -4,7 +4,6 @@ Ruby library for multidimensional maze generation
 [![Gem Version](https://img.shields.io/gem/v/rmaze.svg)](https://rubygems.org/gems/rmaze)
 [![Build Status](https://img.shields.io/travis/pedrohml/rmaze/master.svg)](http://travis-ci.org/pedrohml/rmaze)
 [![Coverage Status](https://img.shields.io/coveralls/pedrohml/rmaze.svg)](https://coveralls.io/github/pedrohml/rmaze)
-[![Security](http://hakiri.io/github/pedrohml/rmaze/master.svg)](https://hakiri.io/github/pedrohml/rmaze/master)
 [![License](https://img.shields.io/github/license/pedrohml/rmaze.svg)](https://github.com/pedrohml/rmaze/blob/master/LICENSE.txt)
 
 #### Description

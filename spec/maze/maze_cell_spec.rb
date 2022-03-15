@@ -128,13 +128,6 @@ describe MazeCell do
     expect(@maze.cell(0, 0).connected_neighbours).to eq([@maze.cell(1, 0), @maze.cell(0, 1)])
   end
 
-  it '#hash' do
-    allow_any_instance_of(MazeCell).to receive(:eql?).and_return(true) # remove elements only based on hash
-    cells = [@maze.cell(0, 0), @maze.cell(1, 0), @maze.cell(0, 1)]
-    cells -= [@maze.cell(0, 0)]
-    expect(cells).to contain_exactly(@maze.cell(1, 0), @maze.cell(0, 1))
-  end
-
   it '#eql?' do
     maze_cell = @maze.cell(0, 0)
     expect(maze_cell).to eql(maze_cell)
