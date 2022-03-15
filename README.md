@@ -21,10 +21,10 @@ Usage: rmaze [options]
 
 Basic options:
     -w, --width width                Specify the maze width (default: 10)
-	-h, --height height              Specify the maze height (default: 10)
+    -h, --height height              Specify the maze height (default: 10)
 
 Algorithms:
-	-b, --backtrace                  Choose backtrace algorithm (default)
+    -b, --backtrace                  Choose backtrace algorithm (default)
 ```
 
 #### Tool usage examples
