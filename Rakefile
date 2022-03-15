@@ -4,10 +4,10 @@ require 'rspec/core/rake_task'
 
 
 begin
-	RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:spec)
 
-	desc 'Rake test'
-	task default: :test
+  desc 'Rake test'
+  task default: :test
 rescue LoadError
 	fail
 end
